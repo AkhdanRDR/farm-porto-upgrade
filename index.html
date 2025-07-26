@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Pak Budi Farm - Pertanian Organik Jawa Timur</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="src/style.css" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body class="bg-cream">
+    <!-- Admin Button -->
+    <button id="admin-toggle" class="admin-btn">
+      <i class="fas fa-pencil-alt text-xl"></i>
+    </button>
+
+    <!-- Admin Panel Overlay -->
+    <div id="admin-overlay" class="admin-overlay"></div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification"></div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-panel">
+      <div class="p-6">
+        <!-- Login Form -->
+        <div id="login-form" class="mb-6">
+          <h3 class="text-2xl font-bold mb-4">Login Admin</h3>
+          <form id="admin-login-form" name="admin-login-form">
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-2" for="admin-username"
+                >Username</label
+              >
+              <input
+                type="text"
+                id="admin-username"
+                class="w-full p-2 border rounded focus:ring-amber-700 focus:border-amber-700"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-2" for="admin-password"
+                >Password</label
+              >
+              <input
+                type="password"
+                id="admin-password"
+                class="w-full p-2 border rounded focus:ring-amber-700 focus:border-amber-700"
+                required
+              />
+            </div>
+            <p id="login-error" class="text-red-600 text-sm mb-3 h-5"></p>
+            <button type="submit" class="btn-primary w-full">Login</button>
+          </form>
+          <!-- <p class="text-xs text-gray-500 mt-2">Hint: admin / admin123</p> -->
+        </div>
+        <!-- Admin Controls (hidden by default) -->
+        <div id="admin-controls" class="hidden">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold">Panel Admin</h3>
+            <button
+              id="admin-logout"
+              class="text-sm font-medium text-red-500 hover:text-red-700"
+            >
+              <i class="fas fa-sign-out-alt mr-1"></i>Logout
+            </button>
+          </div>
+          <!-- Accordion for editing -->
+          <div class="space-y-2">
+            <!-- General Settings -->
+            <div class="border rounded">
+              <button
+                class="accordion-toggle flex justify-between items-center w-full p-4 font-semibold text-left"
+              >
+                Pengaturan Umum<i class="fas fa-chevron-down"></i>
+              </button>
+              <div
+                class="accordion-content p-4 border-t bg-gray-50"
+                style="display: none"
+              >
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium mb-1"
+                      >Nama Farm</label
+                    ><input
+                      type="text"
+                      id="edit-farmName"
+                      class="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1"
+                      >Nama Pemilik</label
+                    ><input
+                      type="text"
+                      id="edit-ownerName"
+                      class="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1">Lokasi</label
+                    ><input
+                      type="text"
+                      id="edit-farmLocation"
+                      class="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1"
+                      >WhatsApp</label
+                    ><input
+                      type="text"
+                      id="edit-farmWhatsapp"
+                      class="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1">Email</label
+                    ><input
+                      type="email"
+                      id="edit-farmEmail"
+                      class="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-medium">Foto Profil</label>
+                    <input
+                      type="file"
+                      id="edit-profileImage"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-medium">Gambar Hero</label>
+                    <input
+                      type="file"
+                      id="edit-heroImage"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Hero & About Section -->
+            <div class="border rounded">
+              <button
+                class="accordion-toggle flex justify-between items-center w-full p-4 font-semibold text-left"
+              >
+                Bagian Hero & Tentang Kami<i class="fas fa-chevron-down"></i>
+              </button>
+              <div
+                class="accordion-content p-4 border-t bg-gray-50"
+                style="display: none"
+              >
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium mb-1"
+                      >Judul Hero</label
+                    ><input
+                      type="text"
+                      id="edit-heroTitle"
+                      class="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1"
+                      >Subtitle Hero</label
+                    ><textarea
+                      id="edit-heroSubtitle"
+                      class="w-full p-2 border rounded"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1"
+                      >Judul Tentang Kami</label
+                    ><input
+                      type="text"
+                      id="edit-aboutTitle"
+                      class="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-1"
+                      >Deskripsi Tentang Kami</label
+                    ><textarea
+                      id="edit-aboutDescription"
+                      class="w-full p-2 border rounded"
+                      rows="4"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Excellence Section -->
+            <div class="border rounded">
+              <button
+                class="accordion-toggle flex justify-between items-center w-full p-4 font-semibold text-left"
+              >
+                Bagian Keunggulan<i class="fas fa-chevron-down"></i>
+              </button>
+              <div
+                class="accordion-content p-4 border-t bg-gray-50"
+                style="display: none"
+              >
+                <div class="space-y-4">
+                  <div class="p-3 border rounded">
+                    <label class="block text-sm font-semibold mb-1"
+                      >Keunggulan 1</label
+                    ><input
+                      type="text"
+                      id="edit-excellence1Title"
+                      placeholder="Judul"
+                      class="w-full p-2 border rounded mb-2"
+                    /><textarea
+                      id="edit-excellence1Desc"
+                      placeholder="Deskripsi"
+                      class="w-full p-2 border rounded"
+                      rows="2"
+                    ></textarea>
+                  </div>
+                  <div class="p-3 border rounded">
+                    <label class="block text-sm font-semibold mb-1"
+                      >Keunggulan 2</label
+                    ><input
+                      type="text"
+                      id="edit-excellence2Title"
+                      placeholder="Judul"
+                      class="w-full p-2 border rounded mb-2"
+                    /><textarea
+                      id="edit-excellence2Desc"
+                      placeholder="Deskripsi"
+                      class="w-full p-2 border rounded"
+                      rows="2"
+                    ></textarea>
+                  </div>
+                  <div class="p-3 border rounded">
+                    <label class="block text-sm font-semibold mb-1"
+                      >Keunggulan 3</label
+                    ><input
+                      type="text"
+                      id="edit-excellence3Title"
+                      placeholder="Judul"
+                      class="w-full p-2 border rounded mb-2"
+                    /><textarea
+                      id="edit-excellence3Desc"
+                      placeholder="Deskripsi"
+                      class="w-full p-2 border rounded"
+                      rows="2"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Gallery Section -->
+            <div class="border rounded">
+              <button
+                class="accordion-toggle flex justify-between items-center w-full p-4 font-semibold text-left"
+              >
+                Bagian Galeri<i class="fas fa-chevron-down"></i>
+              </button>
+              <div
+                class="accordion-content p-4 border-t bg-gray-50"
+                style="display: none"
+              >
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="space-y-2">
+                    <label class="block text-sm font-semibold">Gbr 1</label
+                    ><input
+                      type="file"
+                      id="edit-galleryImg1"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-semibold">Gbr 2</label
+                    ><input
+                      type="file"
+                      id="edit-galleryImg2"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-semibold">Gbr 3</label
+                    ><input
+                      type="file"
+                      id="edit-galleryImg3"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-semibold">Gbr 4</label
+                    ><input
+                      type="file"
+                      id="edit-galleryImg4"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-semibold">Gbr 5</label
+                    ><input
+                      type="file"
+                      id="edit-galleryImg5"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-semibold">Gbr 6</label
+                    ><input
+                      type="file"
+                      id="edit-galleryImg6"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-semibold">Gbr 7</label
+                    ><input
+                      type="file"
+                      id="edit-galleryImg7"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="block text-sm font-semibold">Gbr 8</label
+                    ><input
+                      type="file"
+                      id="edit-galleryImg8"
+                      class="custom-file-input w-full"
+                      accept="image/*"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Testimonial Section -->
+            <div class="border rounded">
+              <button
+                class="accordion-toggle flex justify-between items-center w-full p-4 font-semibold text-left"
+              >
+                Bagian Testimoni<i class="fas fa-chevron-down"></i>
+              </button>
+              <div
+                class="accordion-content p-4 border-t bg-gray-50"
+                style="display: none"
+              >
+                <div class="space-y-4">
+                  <div class="p-3 border rounded">
+                    <label class="block text-sm font-semibold mb-1"
+                      >Testimoni 1</label
+                    ><input
+                      type="text"
+                      id="edit-testimonial1Name"
+                      placeholder="Nama Pelanggan"
+                      class="w-full p-2 border rounded mb-2"
+                    /><input
+                      type="text"
+                      id="edit-testimonial1Title"
+                      placeholder="Jabatan/Pekerjaan"
+                      class="w-full p-2 border rounded mb-2"
+                    /><textarea
+                      id="edit-testimonial1Quote"
+                      placeholder="Kutipan"
+                      class="w-full p-2 border rounded"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div class="p-3 border rounded">
+                    <label class="block text-sm font-semibold mb-1"
+                      >Testimoni 2</label
+                    ><input
+                      type="text"
+                      id="edit-testimonial2Name"
+                      placeholder="Nama Pelanggan"
+                      class="w-full p-2 border rounded mb-2"
+                    /><input
+                      type="text"
+                      id="edit-testimonial2Title"
+                      placeholder="Jabatan/Pekerjaan"
+                      class="w-full p-2 border rounded mb-2"
+                    /><textarea
+                      id="edit-testimonial2Quote"
+                      placeholder="Kutipan"
+                      class="w-full p-2 border rounded"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 flex space-x-2">
+            <button id="save-changes" class="btn-primary flex-1">
+              Simpan Perubahan
+            </button>
+            <button
+              id="reset-changes"
+              class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+            >
+              <i class="fas fa-undo"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 navbar-sticky">
+      <nav
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <a
+          href="#hero"
+          class="flex items-center space-x-2 editable-content"
+          data-edit-target="#edit-farmName"
+        >
+          <svg
+            id="logo-svg"
+            class="h-10 w-10 text-[var(--brown)]"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.95 15.5c-2.3-.53-4.14-2.37-4.67-4.67C5.26 12.31 5 11.66 5 11c0-1.48.68-2.82 1.76-3.73.83-.72 1.88-1.27 3.03-1.27.35 0 .69.04 1.02.11.45.1.88.24 1.28.43.33.15.63.34.9.56.84.69 1.41 1.63 1.41 2.9 0 .66-.26 1.31-.78 1.83-.52.52-1.17.78-1.83.78-.57 0-1.1-.17-1.55-.49-.49-.36-.83-.88-.95-1.46-.07-.32-.1-.65-.1-.98 0-.84.34-1.59.88-2.12.54-.54 1.29-.88 2.12-.88.23 0 .46.04.67.1.34.1.66.25.95.45.54.37.95.93 1.13 1.58.19.65.21 1.35.04 2.02-.45 1.78-1.78 3.2-3.48 3.82-.44.15-.9.25-1.37.28-.43.03-.86.03-1.28 0-.15 0-.29-.01-.44-.02z"
+            />
+          </svg>
+          <span
+            id="nav-farm-name"
+            class="text-2xl font-bold"
+            style="font-family: var(--font-heading); color: var(--green-dark)"
+          ></span>
+        </a>
+        <div class="hidden lg:flex items-center space-x-8">
+          <a
+            href="#about"
+            class="text-gray-700 hover:text-[var(--brown)] hover:-translate-y-0.5 transition-all duration-300"
+            >Tentang Kami</a
+          ><a
+            href="#excellence"
+            class="text-gray-700 hover:text-[var(--brown)] hover:-translate-y-0.5 transition-all duration-300"
+            >Keunggulan</a
+          ><a
+            href="#gallery"
+            class="text-gray-700 hover:text-[var(--brown)] hover:-translate-y-0.5 transition-all duration-300"
+            >Galeri</a
+          ><a
+            href="#testimonial"
+            class="text-gray-700 hover:text-[var(--brown)] hover:-translate-y-0.5 transition-all duration-300"
+            >Testimoni</a
+          >
+        </div>
+        <a href="#contact" class="hidden lg:block btn-primary">Hubungi Kami</a>
+        <button
+          id="mobile-menu-button"
+          class="lg:hidden text-2xl text-[var(--text-dark)]"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+      </nav>
+      <div id="mobile-menu" class="hidden lg:hidden bg-cream shadow-lg">
+        <a href="#about" class="block px-6 py-3 text-gray-700 hover:bg-beige"
+          >Tentang Kami</a
+        ><a
+          href="#excellence"
+          class="block px-6 py-3 text-gray-700 hover:bg-beige"
+          >Keunggulan</a
+        ><a href="#gallery" class="block px-6 py-3 text-gray-700 hover:bg-beige"
+          >Galeri</a
+        ><a
+          href="#testimonial"
+          class="block px-6 py-3 text-gray-700 hover:bg-beige"
+          >Testimoni</a
+        >
+        <div class="p-4">
+          <a href="#contact" class="block text-center btn-primary w-full"
+            >Hubungi Kami</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section
+        id="hero"
+        class="relative h-screen flex items-center justify-center text-center text-white px-6"
+      >
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <img
+          id="hero-bg-image"
+          src=""
+          onerror="this.onerror=null;this.src='https://placehold.co/1920x1080/fefae0/283618?text=Gambar+Sawah';"
+          alt="Pemandangan sawah"
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+        <div class="relative z-10 reveal">
+          <h1
+            id="hero-title-display"
+            class="text-5xl md:text-7xl font-bold mb-4 editable-content"
+            style="font-family: var(--font-heading)"
+            data-edit-target="#edit-heroTitle"
+          ></h1>
+          <p
+            id="hero-subtitle-display"
+            class="text-lg md:text-xl max-w-2xl mx-auto mb-8 editable-content"
+            data-edit-target="#edit-heroSubtitle"
+          ></p>
+          <a href="#gallery" class="btn-primary text-lg">Lihat Hasil Panen</a>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="py-20 md:py-32">
+        <div class="container mx-auto px-6">
+          <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div class="reveal">
+              <img
+                id="profile-image-display"
+                src=""
+                onerror="this.onerror=null;this.src='https://placehold.co/600x700/fefae0/283618?text=Foto+Profil';"
+                alt="Foto Pak Budi"
+                class="rounded-lg shadow-xl w-full h-auto object-cover"
+              />
+            </div>
+            <div class="reveal">
+              <p class="text-[var(--brown)] font-semibold mb-2">TENTANG KAMI</p>
+              <h2
+                id="about-title-display"
+                class="text-4xl font-bold mb-6 editable-content"
+                data-edit-target="#edit-aboutTitle"
+              ></h2>
+              <p
+                id="about-description-display"
+                class="text-lg text-gray-600 mb-6 editable-content"
+                data-edit-target="#edit-aboutDescription"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Excellence Section -->
+      <section id="excellence" class="py-20 md:py-32 batik-pattern">
+        <div class="container mx-auto px-6 text-center">
+          <p class="text-[var(--brown)] font-semibold mb-2">
+            MENGAPA MEMILIH KAMI
+          </p>
+          <h2 class="text-4xl font-bold mb-4">
+            Keunggulan Sawah <span id="excellence-farm-name"></span>
+          </h2>
+          <div class="grid md:grid-cols-3 gap-8 mt-12">
+            <div class="card p-8 text-center reveal">
+              <div class="text-4xl text-[var(--brown)] mb-4">
+                <i class="fas fa-leaf"></i>
+              </div>
+              <h3
+                id="excellence1-title-display"
+                class="text-xl font-semibold mb-2 editable-content"
+                data-edit-target="#edit-excellence1Title"
+              ></h3>
+              <p
+                id="excellence1-desc-display"
+                class="text-gray-600 editable-content"
+                data-edit-target="#edit-excellence1Desc"
+              ></p>
+            </div>
+            <div
+              class="card p-8 text-center reveal"
+              style="transition-delay: 200ms"
+            >
+              <div class="text-4xl text-[var(--brown)] mb-4">
+                <i class="fas fa-shipping-fast"></i>
+              </div>
+              <h3
+                id="excellence2-title-display"
+                class="text-xl font-semibold mb-2 editable-content"
+                data-edit-target="#edit-excellence2Title"
+              ></h3>
+              <p
+                id="excellence2-desc-display"
+                class="text-gray-600 editable-content"
+                data-edit-target="#edit-excellence2Desc"
+              ></p>
+            </div>
+            <div
+              class="card p-8 text-center reveal"
+              style="transition-delay: 400ms"
+            >
+              <div class="text-4xl text-[var(--brown)] mb-4">
+                <i class="fas fa-hands-helping"></i>
+              </div>
+              <h3
+                id="excellence3-title-display"
+                class="text-xl font-semibold mb-2 editable-content"
+                data-edit-target="#edit-excellence3Title"
+              ></h3>
+              <p
+                id="excellence3-desc-display"
+                class="text-gray-600 editable-content"
+                data-edit-target="#edit-excellence3Desc"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Gallery Section -->
+      <section id="gallery" class="py-20 md:py-32">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <p class="text-[var(--brown)] font-semibold mb-2">GALERI KAMI</p>
+            <h2 class="text-4xl font-bold mb-4">Dari Bibit hingga Panen</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+              Lihat lebih dekat proses dan hasil kerja keras kami di sawah.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="grid gap-4">
+              <div class="reveal">
+                <img
+                  id="gallery-img-1"
+                  class="h-auto max-w-full rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                  src=""
+                  alt="Galeri 1"
+                />
+              </div>
+              <div class="reveal">
+                <img
+                  id="gallery-img-2"
+                  class="h-auto max-w-full rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                  src=""
+                  alt="Galeri 2"
+                />
+              </div>
+            </div>
+            <div class="grid gap-4">
+              <div class="reveal">
+                <img
+                  id="gallery-img-3"
+                  class="h-auto max-w-full rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                  src=""
+                  alt="Galeri 3"
+                />
+              </div>
+              <div class="reveal">
+                <img
+                  id="gallery-img-4"
+                  class="h-auto max-w-full rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                  src=""
+                  alt="Galeri 4"
+                />
+              </div>
+            </div>
+            <div class="grid gap-4">
+              <div class="reveal">
+                <img
+                  id="gallery-img-5"
+                  class="h-auto max-w-full rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                  src=""
+                  alt="Galeri 5"
+                />
+              </div>
+              <div class="reveal">
+                <img
+                  id="gallery-img-6"
+                  class="h-auto max-w-full rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                  src=""
+                  alt="Galeri 6"
+                />
+              </div>
+            </div>
+            <div class="grid gap-4">
+              <div class="reveal">
+                <img
+                  id="gallery-img-7"
+                  class="h-auto max-w-full rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                  src=""
+                  alt="Galeri 7"
+                />
+              </div>
+              <div class="reveal">
+                <img
+                  id="gallery-img-8"
+                  class="h-auto max-w-full rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                  src=""
+                  alt="Galeri 8"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonial Section -->
+      <section id="testimonial" class="py-20 md:py-32 batik-pattern">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <p class="text-[var(--brown)] font-semibold mb-2">KATA MEREKA</p>
+            <h2 class="text-4xl font-bold mb-4">Cerita dari Pelanggan Setia</h2>
+          </div>
+          <div
+            class="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto"
+          >
+            <div class="card p-8 reveal">
+              <div
+                class="flex items-center mb-4 editable-content"
+                data-edit-target="#edit-testimonial1Name"
+              >
+                <div
+                  class="w-12 h-12 bg-[var(--brown)] text-white rounded-full flex items-center justify-center font-bold text-xl mr-4"
+                  id="testimonial1-initial"
+                ></div>
+                <div>
+                  <h4 class="font-semibold" id="testimonial1-name"></h4>
+                  <p class="text-sm text-gray-500" id="testimonial1-title"></p>
+                </div>
+              </div>
+              <p
+                class="text-gray-600 editable-content"
+                id="testimonial1-quote"
+                data-edit-target="#edit-testimonial1Quote"
+              ></p>
+            </div>
+            <div class="card p-8 reveal" style="transition-delay: 200ms">
+              <div
+                class="flex items-center mb-4 editable-content"
+                data-edit-target="#edit-testimonial2Name"
+              >
+                <div
+                  class="w-12 h-12 bg-[var(--brown)] text-white rounded-full flex items-center justify-center font-bold text-xl mr-4"
+                  id="testimonial2-initial"
+                ></div>
+                <div>
+                  <h4 class="font-semibold" id="testimonial2-name"></h4>
+                  <p class="text-sm text-gray-500" id="testimonial2-title"></p>
+                </div>
+              </div>
+              <p
+                class="text-gray-600 editable-content"
+                id="testimonial2-quote"
+                data-edit-target="#edit-testimonial2Quote"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="py-20 md:py-32">
+        <div class="container mx-auto px-6">
+          <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="reveal">
+              <p class="text-[var(--brown)] font-semibold mb-2">HUBUNGI KAMI</p>
+              <h2 class="text-4xl font-bold mb-6">Mari Terhubung</h2>
+              <p class="text-lg text-gray-600 mb-8">
+                Ada pertanyaan atau ingin memesan? Jangan ragu untuk menghubungi
+                kami. Kami siap membantu Anda.
+              </p>
+              <div class="space-y-5">
+                <div class="flex items-center text-gray-700">
+                  <i class="fas fa-map-marker-alt w-6 text-[var(--brown)]"></i
+                  ><span id="contact-location"></span>
+                </div>
+                <div class="flex items-center text-gray-700">
+                  <i class="fab fa-whatsapp w-6 text-[var(--brown)]"></i
+                  ><span id="contact-whatsapp"></span>
+                </div>
+                <div class="flex items-center text-gray-700">
+                  <i class="fas fa-envelope w-6 text-[var(--brown)]"></i
+                  ><span id="contact-email"></span>
+                </div>
+              </div>
+            </div>
+            <div class="card p-8 reveal">
+              <form id="contactForm" name="contactForm">
+                <div class="mb-4">
+                  <label
+                    for="name"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Nama</label
+                  ><input
+                    type="text"
+                    id="name"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-amber-700 focus:border-amber-700"
+                    required
+                  />
+                </div>
+                <div class="mb-4">
+                  <label
+                    for="email"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Email</label
+                  ><input
+                    type="email"
+                    id="email"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-amber-700 focus:border-amber-700"
+                    required
+                  />
+                </div>
+                <div class="mb-4">
+                  <label
+                    for="message"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Pesan</label
+                  ><textarea
+                    id="message"
+                    rows="4"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-amber-700 focus:border-amber-700"
+                    required
+                  ></textarea>
+                </div>
+                <button type="submit" class="btn-primary w-full">
+                  Kirim Pesan
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="batik-pattern pt-16 pb-8">
+      <div class="container mx-auto px-6 text-gray-600">
+        <div class="grid lg:grid-cols-3 gap-12 text-center lg:text-left mb-12">
+          <!-- Column 1: About Farm -->
+          <div>
+            <a
+              href="#hero"
+              class="flex items-center justify-center lg:justify-start space-x-2 text-2xl font-bold mb-4"
+              style="font-family: var(--font-heading); color: var(--green-dark)"
+            >
+              <svg
+                class="h-8 w-8 text-[var(--brown)]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.95 15.5c-2.3-.53-4.14-2.37-4.67-4.67C5.26 12.31 5 11.66 5 11c0-1.48.68-2.82 1.76-3.73.83-.72 1.88-1.27 3.03-1.27.35 0 .69.04 1.02.11.45.1.88.24 1.28.43.33.15.63.34.9.56.84.69 1.41 1.63 1.41 2.9 0 .66-.26 1.31-.78 1.83-.52.52-1.17.78-1.83.78-.57 0-1.1-.17-1.55-.49-.49-.36-.83-.88-.95-1.46-.07-.32-.1-.65-.1-.98 0-.84.34-1.59.88-2.12.54-.54 1.29-.88 2.12-.88.23 0 .46.04.67.1.34.1.66.25.95.45.54.37.95.93 1.13 1.58.19.65.21 1.35.04 2.02-.45 1.78-1.78 3.2-3.48 3.82-.44.15-.9.25-1.37.28-.43.03-.86.03-1.28 0-.15 0-.29-.01-.44-.02z"
+                />
+              </svg>
+              <span id="footer-farm-name"></span>
+            </a>
+            <p class="text-sm">
+              Menghadirkan hasil pertanian organik terbaik dari tanah subur
+              Malang, langsung ke meja Anda.
+            </p>
+          </div>
+
+          <!-- Column 2: Quick Links -->
+          <div>
+            <h4 class="font-semibold text-lg mb-4 text-gray-800">
+              Tautan Cepat
+            </h4>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a
+                  href="#about"
+                  class="hover:text-[var(--brown)] transition-colors"
+                  >Tentang Kami</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#excellence"
+                  class="hover:text-[var(--brown)] transition-colors"
+                  >Keunggulan</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#gallery"
+                  class="hover:text-[var(--brown)] transition-colors"
+                  >Galeri</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="hover:text-[var(--brown)] transition-colors"
+                  >Hubungi Kami</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Social Media -->
+          <div>
+            <h4 class="font-semibold text-lg mb-4 text-gray-800">
+              Tetap Terhubung
+            </h4>
+            <p class="text-sm mb-4">
+              Ikuti kami di media sosial untuk info panen terbaru dan tips
+              pertanian.
+            </p>
+            <div
+              class="flex justify-center lg:justify-start space-x-4 text-2xl"
+            >
+              <a href="#" class="hover:text-[var(--brown)] transition-colors"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="hover:text-[var(--brown)] transition-colors"
+                ><i class="fab fa-facebook-square"></i
+              ></a>
+              <a href="#" class="hover:text-[var(--brown)] transition-colors"
+                ><i class="fab fa-whatsapp"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-300/50 pt-6 text-center text-sm">
+          <p>
+            © 2024 <span id="footer-farm-name-2"></span>. Dibuat dengan
+            <i class="fas fa-heart text-red-500"></i> di Jawa Timur.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="src/script.js"></script>
+  </body>
+</html>
